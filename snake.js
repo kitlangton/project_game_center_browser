@@ -1,5 +1,5 @@
 var model = {
-  size: 30,
+  size: 15,
 
   grid: { '4,4': 4 },
 
