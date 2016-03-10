@@ -13,6 +13,7 @@ var model = {
     this.tail = new model.BodyPart( 'up', startX - 1, startY - 1, 'tail', null );
     this.body = new model.BodyPart( 'right', startX - 1, startY,'body', this.tail   );
     this.head = new model.BodyPart( 'right', startX, startY, 'head', this.body  );
+    this.bodyParts = [this.head, this.body, this.tail];
   },
 
   addSnakeToGrid: function() {
@@ -24,6 +25,7 @@ var model = {
   },
 
   removeSnakeFromGrid: function() {
+    this.grid = {}
     var bodypart = this.snake.head;
     while( bodypart ) {
       this.revmoveItemFromGrid( bodypart );
@@ -33,39 +35,33 @@ var model = {
 
 
   moveSnakeHead: function( direction) {
+    this.snake.head.orientation = direction;
     switch(direction){
       case 'up':
         this.snake.head.y += 1;
+        break;
       case 'down':
         this.snake.head.y -= 1;
+        break;
       case 'left':
         this.snake.head.x -= 1;
+        break;
       case 'right':
         this.snake.head.x += 1;
+        break;
     }
   },
 
 
   moveSnake: function( direction ) {
-
     this.removeSnakeFromGrid();
-    var bodypart = this.snake.head;
-    var lastPositionX  = bodypart.x;
-    var lastPositionY = bodypart.y;
-    var lastOrientation = bodypart.orientation ;
 
-    while( bodypart.next ) {
-      var nextBodypart = bodypart.next;
-
-      nextBodypart.x = lastPositionX;
-      nextBodypart.y = lastPositionY;
-      nextBodypart.orientation =lastOrientation;
-
-      lastPositionX  = bodypart.x;
-      lastPositionY = bodypart.y;
-      lastOrientation = bodypart.orientation ;
-
-      bodypart = nextBodypart;
+    for (var i = this.snake.bodyParts.length - 1; i > 0; --i) {
+      var bodyPart = this.snake.bodyParts[i];
+      var nextBodyPart = this.snake.bodyParts[i-1]
+      bodyPart.x = nextBodyPart.x;
+      bodyPart.y = nextBodyPart.y;
+      bodyPart.orientation = nextBodyPart.orientation;
     }
 
     this.moveSnakeHead(direction);
