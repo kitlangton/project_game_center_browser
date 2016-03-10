@@ -1,11 +1,25 @@
+
+
 var model = {
   size: 15,
 
   grid: { '4,4': 4 },
 
   init: function() {
+    // need to get initial location here
 
+    this.makeSnake( 5, 7);
   },
+
+  makeSnake: function( startX, startY ) {
+    this.head: new BodyPart( 'right', startX, startY, 'head', this.body   ),
+    this.body: new BodyPart( 'right', startX - 1, startY,'body', this.tail   ),
+    this.tail: new BodyPart( 'up', startX - 1, startY - 1, 'tail', null )
+  },
+
+  // getOrientation: function( grid1, grid2) {
+
+  // },
 
   gridGet: function(x, y) {
     return this.grid[x.toString() + ',' + y.toString()];
@@ -25,7 +39,8 @@ var controller = {
   gridSize: model.size,
 
   init: function() {
-    view.init()
+    model.init();
+    view.init();
   },
 };
 
