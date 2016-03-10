@@ -1,5 +1,3 @@
-
-
 var model = {
   size: 15,
   grid: { },
@@ -31,7 +29,7 @@ var model = {
       this.revmoveItemFromGrid( bodypart );
       bodypart = bodypart.next;
     }
-  },  
+  },
 
 
   moveSnakeHead: function( direction) {
@@ -49,19 +47,19 @@ var model = {
 
 
   moveSnake: function( direction ) {
-    
+
     this.removeSnakeFromGrid();
     var bodypart = this.snake.head;
 
     while( bodypart.next ) {
-      
+
       var nextBodypart = bodypart.next;
       nextBodypart.x = bodypart.x;
       nextBodypart.y = bodypart.y;
       nextBodypart.orientation = bodypart.orientation;
       bodypart = nextBodypart;
     }
-    
+
     this.moveSnakeHead(direction);
     this.addSnakeToGrid();
   },
@@ -103,6 +101,11 @@ var model = {
 var controller = {
   gridSize: model.size,
 
+  moveSnake: function(direction) {
+    model.moveSnake(direction);
+    view.render();
+  },
+
   objectAt: function(x,y) {
     return model.gridGet(x,y);
   },
@@ -143,4 +146,23 @@ var view = {
 
 $(document).ready(function(){
   controller.init();
+  window.addEventListener('keydown', function(event) {
+    switch (event.keyCode) {
+      case 37: // Left
+        controller.moveSnake('left')
+          break;
+
+      case 38: // Up
+        controller.moveSnake('up')
+          break;
+
+      case 39: // Right
+        controller.moveSnake('right')
+          break;
+
+      case 40: // Down
+        controller.moveSnake('down')
+          break;
+    }
+  }, false);
 });
