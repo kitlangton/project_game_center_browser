@@ -18,13 +18,60 @@ var model = {
   },
 
   addSnakeToGrid: function() {
-    this.addItemToGrid(this.snake.head);
-    this.addItemToGrid(this.snake.body);
-    this.addItemToGrid(this.snake.tail);
+    var bodypart = this.snake.head;
+    while( bodypart ) {
+      this.addItemToGrid( bodypart )
+      bodypart = bodypart.next;
+    }
+  },
+
+  removeSnakeFromGrid: function() {
+    var bodypart = this.snake.head;
+    while( bodypart ) {
+      this.revmoveItemFromGrid( bodypart );
+      bodypart = bodypart.next;
+    }
+  },  
+
+
+  moveSnakeHead: function( direction) {
+    switch(direction){
+      case 'up':
+        this.snake.head.y += 1;
+      case 'down':
+        this.snake.head.y -= 1;
+      case 'left':
+        this.snake.head.x -= 1;
+      case 'right':
+        this.snake.head.x += 1;
+    }
+  },
+
+
+  moveSnake: function( direction ) {
+    
+    this.removeSnakeFromGrid();
+    var bodypart = this.snake.head;
+
+    while( bodypart.next ) {
+      
+      var nextBodypart = bodypart.next;
+      nextBodypart.x = bodypart.x;
+      nextBodypart.y = bodypart.y;
+      nextBodypart.orientation = bodypart.orientation;
+      bodypart = nextBodypart;
+    }
+    
+    this.moveSnakeHead(direction);
+    this.addSnakeToGrid();
   },
 
   addItemToGrid: function(item) {
-    this.addToGrid(item.x, item.y, item)
+    this.addToGrid(item.x, item.y, item);
+  },
+
+  revmoveItemFromGrid: function(item) {
+    this.removeFromGrid( item.x, item.y );
   },
 
   gridGet: function(x, y) {
@@ -35,6 +82,11 @@ var model = {
     this.grid[x.toString() + ',' + y.toString()] = value;
   },
 
+  removeFromGrid: function(x, y) {
+    this.grid[x.toString() + ',' + y.toString()] = null;
+  },
+
+
   BodyPart: function (orientation, x, y, type, next) {
     this.orientation = orientation;
     this.x = x;
@@ -42,6 +94,9 @@ var model = {
     this.type = type;
     this.next = next
   }
+
+
+
 
 };
 
