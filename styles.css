@@ -74,8 +74,8 @@ body, div {
 .head::before {
    content: " ";
    position: absolute;
-   width: 500px;
-   height: 340px;
+   width: 200px;
+   height: 200px;
    z-index: 100;
    background-repeat: no-repeat;
    background-image: url(CatHead.png);
@@ -87,8 +87,8 @@ body, div {
  .body:before {
    content: " ";
    position: absolute;
-   width: 500px;
-   height: 340px;
+   width: 200px;
+   height: 200px;
    z-index: 5;
    background-repeat: no-repeat;
    background-image: url(CatBody.png);
@@ -100,8 +100,8 @@ body, div {
  .tail:before {
    content: " ";
    position: absolute;
-   width: 500px;
-   height: 340px;
+   width: 200px;
+   height: 200px;
    z-index: 10;
    background-repeat: no-repeat;
    background-image: url(CatTail.png);

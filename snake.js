@@ -1,6 +1,7 @@
 var model = {
   size: 15,
   grid: { },
+  direction: 'right',
 
   init: function() {
     // need to get initial location here
@@ -24,6 +25,15 @@ var model = {
     }
   },
 
+  extendBody: function() {
+    var tail = this.snake.tail;
+    var newTail = new model.BodyPart( 'up', 0, 0, 'tail');
+    tail.next = newTail;
+    tail.type = 'body';
+    this.snake.tail = newTail;
+    this.snake.bodyParts.push(newTail);
+  },
+
   removeSnakeFromGrid: function() {
     this.grid = {}
     var bodypart = this.snake.head;
@@ -34,9 +44,9 @@ var model = {
   },
 
 
-  moveSnakeHead: function( direction) {
-    this.snake.head.orientation = direction;
-    switch(direction){
+  moveSnakeHead: function() {
+    this.snake.head.orientation = this.direction;
+    switch(this.direction){
       case 'up':
         this.snake.head.y += 1;
         break;
@@ -53,18 +63,19 @@ var model = {
   },
 
 
-  moveSnake: function( direction ) {
+  moveSnake: function() {
     this.removeSnakeFromGrid();
 
     for (var i = this.snake.bodyParts.length - 1; i > 0; --i) {
       var bodyPart = this.snake.bodyParts[i];
+      bodyPart.order = i
       var nextBodyPart = this.snake.bodyParts[i-1]
       bodyPart.x = nextBodyPart.x;
       bodyPart.y = nextBodyPart.y;
       bodyPart.orientation = nextBodyPart.orientation;
     }
 
-    this.moveSnakeHead(direction);
+    this.moveSnakeHead();
     this.addSnakeToGrid();
   },
 
@@ -94,19 +105,19 @@ var model = {
     this.x = x;
     this.y = y;
     this.type = type;
-    this.next = next
+    this.next = next;
+    this.order = 0;
   }
-
-
-
-
 };
 
 var controller = {
   gridSize: model.size,
 
-  moveSnake: function(direction) {
-    model.moveSnake(direction);
+  setDirection: function(direction) {
+    if (direction == 'down') {
+      model.extendBody();
+    }
+    model.direction = direction;
     view.render();
   },
 
@@ -117,12 +128,16 @@ var controller = {
   init: function() {
     model.init();
     view.init();
+    setInterval(function() {
+      model.moveSnake();
+      view.render();
+    },150)
   },
 };
 
 var view = {
 
-  init: function() {
+  init: function(){
     this.render();
   },
 
@@ -137,6 +152,7 @@ var view = {
         if (object) {
           cell.addClass(object.type);
           cell.addClass(object.orientation);
+          cell.css('zIndex', object.order);
         }
 
         cell.data('x', x.toString());
@@ -153,19 +169,19 @@ $(document).ready(function(){
   window.addEventListener('keydown', function(event) {
     switch (event.keyCode) {
       case 37: // Left
-        controller.moveSnake('left')
+        controller.setDirection('left')
           break;
 
       case 38: // Up
-        controller.moveSnake('up')
+        controller.setDirection('up')
           break;
 
       case 39: // Right
-        controller.moveSnake('right')
+        controller.setDirection('right')
           break;
 
       case 40: // Down
-        controller.moveSnake('down')
+        controller.setDirection('down')
           break;
     }
   }, false);
