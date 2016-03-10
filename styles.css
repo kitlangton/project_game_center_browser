@@ -41,6 +41,10 @@ body, div {
   border: 1px solid black;
 }
 
-.head, .body, .tail {
+.head {
+  background-color: purple;
+}
+
+.body, .tail {
   background-color: red;
 }
