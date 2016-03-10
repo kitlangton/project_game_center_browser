@@ -52,13 +52,21 @@ var model = {
     
     this.removeSnakeFromGrid();
     var bodypart = this.snake.head;
+    var lastPositionX  = bodypart.x;
+    var lastPositionY = bodypart.y;
+    var lastOrientation = bodypart.orientation ;
 
     while( bodypart.next ) {
-      
       var nextBodypart = bodypart.next;
-      nextBodypart.x = bodypart.x;
-      nextBodypart.y = bodypart.y;
-      nextBodypart.orientation = bodypart.orientation;
+
+      nextBodypart.x = lastPositionX;
+      nextBodypart.y = lastPositionY;
+      nextBodypart.orientation =lastOrientation;
+
+      lastPositionX  = bodypart.x;
+      lastPositionY = bodypart.y;
+      lastOrientation = bodypart.orientation ;
+
       bodypart = nextBodypart;
     }
     
