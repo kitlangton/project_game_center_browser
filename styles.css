@@ -1,0 +1,9 @@
+img {
+  width: 100px;
+  height: auto;
+}
+
+.part {
+  position: absolute;
+  transition: all 0.3s;
+}
