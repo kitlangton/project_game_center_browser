@@ -97,7 +97,7 @@ var model = {
       bodyPart.x = nextBodyPart.x;
       bodyPart.y = nextBodyPart.y;
 
-      var positionString = bodyPart.x.toString() + ',' + bodyPart.y.toString;
+      var positionString = bodyPart.x.toString() + ',' + bodyPart.y.toString();
       if( snakeGridPoints.indexOf(positionString) !== -1 ) {
         console.log('im here');
         this.gameState = 'finished';
