@@ -1,5 +1,6 @@
 var model = {
   size: 15,
+  gameState: 'running',
   grid: { },
   direction: 'right',
 
@@ -43,28 +44,51 @@ var model = {
     }
   },
 
+  getNewSnakeHeadPosition: function() {
+    var position = {
+      x: this.snake.head.x,
+      y: this.snake.head.y
+    };
 
-  moveSnakeHead: function() {
-    this.snake.head.orientation = this.direction;
     switch(this.direction){
       case 'up':
-        this.snake.head.y += 1;
+        position.y = this.snake.head.y + 1;
+        if(position.y >= this.size ) {
+          this.gameState = 'finished'
+        }
         break;
       case 'down':
-        this.snake.head.y -= 1;
+        position.y = this.snake.head.y - 1;
+        if( position.y < 0 ) {
+          this.gameState = 'finished'
+        }
         break;
       case 'left':
-        this.snake.head.x -= 1;
+        position.x = this.snake.head.x - 1;
+        if(position.x < 0 ) {
+          this.gameState = 'finished'
+        }
         break;
       case 'right':
-        this.snake.head.x += 1;
+        position.x = this.snake.head.x + 1;
+        if(position.x >= this.size ) {
+          this.gameState = 'finished'
+        }
         break;
     }
+    return position;
   },
 
 
   moveSnake: function() {
+    var position = this.getNewSnakeHeadPosition();
+    if( this.gameState === 'fininshed' ) {
+      return "game over";
+    }
+
     this.removeSnakeFromGrid();
+
+    var snakeGridPoints = [];
 
     for (var i = this.snake.bodyParts.length - 1; i > 0; --i) {
       var bodyPart = this.snake.bodyParts[i];
@@ -72,12 +96,26 @@ var model = {
       var nextBodyPart = this.snake.bodyParts[i-1]
       bodyPart.x = nextBodyPart.x;
       bodyPart.y = nextBodyPart.y;
+
+      var positionString = bodyPart.x.toString() + ',' + bodyPart.y.toString;
+      if( snakeGridPoints.indexOf(positionString) !== -1 ) {
+        console.log('im here');
+        this.gameState = 'finished';
+      }
+
+      snakeGridPoints.push( positionString );
       bodyPart.orientation = nextBodyPart.orientation;
     }
 
-    this.moveSnakeHead();
+    // this.moveSnakeHead();
+    this.snake.head.orientation = this.direction;
+    this.snake.head.x = position.x;
+    this.snake.head.y = position.y;
+
     this.addSnakeToGrid();
   },
+
+
 
   addItemToGrid: function(item) {
     this.addToGrid(item.x, item.y, item);
@@ -110,6 +148,9 @@ var model = {
   }
 };
 
+
+
+
 var controller = {
   gridSize: model.size,
 
@@ -129,9 +170,11 @@ var controller = {
     model.init();
     view.init();
     setInterval(function() {
-      model.moveSnake();
-      view.render();
-    },150)
+      if( model.gameState !== 'finished' ) {
+        model.moveSnake();
+        view.render();
+      }
+    },150);
   },
 };
 
